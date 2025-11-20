@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+</head>
+<body>
+<head>
+  <title>Saurab Khanal — Portfolio</title>
+  <meta name="description" content="Portfolio of Saurab Khanal — Web developer ; CS student" />
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <div class="brand">
+        <div>
+          <div >Saurab Khanal</div>
+          <div>BSc CSIT • Web Developer</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header id="hero" class="hero">
+      <div>
+        <p style="color:var(--muted);margin:0 0 8px;">Hi, I'm  Saurab Khanal</p>
+        <p>I’m a BSc CSIT student and aspiring software developer focusing on frontend and full-stack projects. I enjoy turning ideas into polished, responsive web applications and learning new technologies along the way.</p>
+    </div>
+          <div> <h1>Saurab Khanal</h1></div>
+          <div style="color:var(--muted);font-size:14px">BSc CSIT • Web &amp; Software dev</div>
+        </div>
+        <p> build front-end interfaces and small full-stack apps. I enjoy clean UI, good UX, and optimized code.</p>
+      </aside>
+    </header>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section-title">
+        <h2>About</h2>
+        <p>Who I am & what I do</p>
+      </div>
+      <div class="about-grid">
+        <div>
+          <p>Hello — I'm <strong>Saurab Khanal</strong>, a student of BSc CSIT with a focus on web development and software design. I like building projects that solve real problems and learning modern web tech.</p>
+          <h3 style="margin-top:12px">Skills</h3>
+          <div class="skills">
+            <div class="skill">HTML</div>
+            <div class="skill">CSS</div>
+            <div class="skill">JavaScript</div>
+            <div class="skill">PHP</div>
+            <div class="skill">MySQL</div>
+            <div class="skill">React (learning)</div>
+          </div>
+        </div>
+
+        <div style="align-self:start">
+          <h3>Quick facts</h3>
+          <ul style>
+            <li>Based in Satungal, Nepal</li>
+            <li>Studying BSc CSIT</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="section-title">
+        <h2>Experience</h2>
+        <p>Where I've worked & what I built</p>
+      </div>
+
+      <div class="timeline">
+        <article class="exp">
+          <h3>Frontend Developer — Personal projects</h3>
+          <span>2024 — Present</span>
+          <p style="color:var(--muted)">Built multiple portfolio and small web apps using HTML, CSS, and JavaScript. Focused on responsive UI and accessibility.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-title">
+        <h2>Projects</h2>
+        <p>Selected projects & highlights</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project">
+          <h4>Anime Catalogue (PHP & MySQL)</h4>
+          <p style="color:var(--muted);margin:8px 0">A beginner-level site to browse and rate anime. Includes login, CRUD for admin, and search features.</p>
+          <div class="tags"><span class="tag">PHP</span><span class="tag">MySQL</span><span class="tag">HTML</span></div>
+        </div>
+        <div class="project">
+          <h4>Portfolio Website</h4>
+          <p style="color:var(--muted);margin:8px 0">This portfolio (single-file) showcasing projects, contact form, and resume link.</p>
+          <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-title">
+        <h2>Contact</h2>
+        <p>Let's build something together</p>
+      </div>
+
+      <form id="contactForm" onsubmit="return handleSubmit(event)">
+        <input type="text" id="name" name="name" placeholder="Your name" required />
+        <input type="email" id="email" name="email" placeholder="Your email" required />
+        <input type="text" id="subject" name="subject" placeholder="Subject" />
+        <textarea id="message" name="message" rows="6" placeholder="Write your message" required></textarea>
+        <div style="display:flex;gap:12px;align-items:center">
+          <button type="submit">Send message</button>
+          <div id="formStatus" style="color:var(--muted);font-size:14px"></div>
+        </div>
+      </form>
+    </section>
+
+    <footer>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div>© <strong>Saurab Khanal</strong> — {2025}</div>
+        <div style="color:var(--muted)">Made with HTML, CSS & JavaScript • Available for hire</div>
+      </div>
+    </footer>
+  </div>  
+</body>
+</html>
