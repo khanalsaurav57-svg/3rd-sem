@@ -1,0 +1,203 @@
+/* style.css - Portfolio styles for Saurab Khanal */
+
+/* Root variables for colors, container width, and theme values */
+:root{
+  --bg: #071827;                /* Background color */
+  --card: #0b1220;              /* Card background color */
+  --muted: #9aa4b2;             /* Muted/light text color */
+  --accent: #6ee7b7;            /* Accent/primary highlight color */
+  --glass: rgba(255,255,255,0.03); /* Glass-like transparent card bg */
+  --container: 1100px;          /* Max width for container */
+}
+
+*{box-sizing:border-box}        /* Include borders/padding inside element size */
+html,body{
+    height:100%                 /* Full height for layout */
+}
+
+body{
+  margin:0;                     /* Remove default margin */
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; /* Font stack */
+  background: linear-gradient(180deg,#071021 0%, #071827 100%); /* Background gradient */
+  color:#e6eef6;                /* Default text color */
+  -webkit-font-smoothing:antialiased; /* Smooth text rendering */
+  line-height:1.5;              /* Default line height */
+}
+
+.container{
+    max-width:var(--container); /* Max container width */
+    margin:0 auto;              /* Center container */
+    padding:0 20px              /* Add padding on sides */
+}
+
+/* Header / Navigation Bar */
+header{
+    position:sticky;            /* Sticks header on top when scrolling */
+    top:0;                      /* Stick to top */
+    background:linear-gradient(180deg, rgba(7,10,15,0.6), rgba(7,10,15,0.4)); /* Transparent gradient */
+    backdrop-filter:blur(6px);  /* Blur behind header */
+    border-bottom:1px solid rgba(255,255,255,0.03) /* Light bottom border */
+}
+
+.nav{
+    display:flex;               /* Flexbox layout */
+    align-items:center;         /* Center items vertically */
+    justify-content:space-between; /* Space between brand + links */
+    padding:14px 0              /* Vertical padding */
+}
+
+.brand{font-weight:700}         /* Bold brand text */
+.brand span{color:var(--accent)} /* Color accent on name highlight */
+
+.nav-links{
+    display:flex;               /* Layout links horizontally */
+    gap:16px;                   /* Space between links */
+    list-style:none;            /* Remove bullets */
+    margin:0;                   /* Remove default margin */
+    padding:0                   /* Remove default padding */
+}
+
+.nav-links li a{
+    color:var(--muted);         /* Link text color */
+    text-decoration:none;       /* Remove underline */
+    padding:8px 10px;           /* Padding */
+    border-radius:8px;          /* Rounded hover shape */
+    font-weight:600             /* Semi-bold text */
+}
+
+.nav-links li a:hover{
+    color:#fff;                 /* Text becomes white */
+    background:rgba(255,255,255,0.03) /* Light hover background */
+}
+
+.btn-nav{
+    background:linear-gradient(90deg,var(--accent),#4fd1c5); /* Green gradient */
+    color:#042024;              /* Dark text */
+    padding:8px 12px;           /* Button padding */
+    border-radius:8px;          /* Rounded button */
+    font-weight:700             /* Bold button */
+}
+
+/* Hero Section */
+.hero{
+    display:grid;               /* Grid layout */
+    grid-template-columns:1fr 420px; /* Two-column layout */
+    gap:36px;                   /* Gap between columns */
+    align-items:center;         /* Vertically center items */
+    padding:48px 0              /* Large vertical spacing */
+}
+
+.hero-text h1{
+    font-size:clamp(28px,4vw,44px); /* Responsive heading size */
+    margin:0 0 10px             /* Margin below heading */
+}
+
+.highlight{color:var(--accent)} /* Highlight color */
+
+.hero-text p{
+    color:var(--muted);         /* Muted subtitle */
+    margin:0 0 18px             /* Space under paragraph */
+}
+
+.btn-primary{
+    display:inline-block;       /* Allow padding */
+    padding:10px 14px;          /* Button size */
+    border-radius:10px;         /* Rounded */
+    background:var(--accent);   /* Accent bg */
+    color:#042024;              /* Dark text */
+    text-decoration:none;       /* Remove underline */
+    font-weight:700;            /* Bold */
+    margin-right:10px           /* Space next to button */
+}
+
+.btn-outline{
+    display:inline-block;       /* Standard button block */
+    padding:10px 14px;          /* Button padding */
+    border-radius:10px;         /* Rounded */
+    border:1px solid rgba(255,255,255,0.06); /* Light border */
+    color:var(--muted);         /* Muted text */
+    text-decoration:none        /* Remove underline */
+}
+
+.hero-image{
+    height:320px;               /* Hero image height */
+    border-radius:12px;         /* Rounded corners */
+    background:linear-gradient(135deg,#15324a,#1a3d5a) /* Placeholder gradient */
+}
+
+.section{
+    padding:36px 0;             /* Section spacing */
+    border-top:1px solid rgba(255,255,255,0.02) /* Separator line */
+}
+
+h2{
+    margin:0 0 14px;            /* Space below heading */
+    font-size:20px              /* Heading size */
+}
+
+.card{
+    background:var(--glass);    /* Glass background */
+    padding:14px;               /* Padding */
+    border-radius:10px;         /* Rounded corners */
+    margin-bottom:12px          /* Space below */
+}
+
+/* Project Grid */
+.projects-grid{
+    display:grid;               /* Grid layout */
+    grid-template-columns:repeat(3,1fr); /* 3 equal columns */
+    gap:16px                    /* Space between cards */
+}
+
+.project-card{
+    background:var(--card);     /* Card background */
+    padding:14px;               /* Padding */
+    border-radius:10px          /* Rounded */
+}
+
+.project-img{
+    height:140px;               /* Project thumbnail height */
+    border-radius:8px;          /* Rounded */
+    background:linear-gradient(120deg,#163246,#234b67); /* Placeholder gradient */
+    margin-bottom:10px          /* Space below image */
+}
+
+/* Contact Form */
+.contact-form{
+    display:flex;               /* Flex column */
+    flex-direction:column;      /* Vertical layout */
+    gap:12px;                   /* Spacing between inputs */
+    max-width:640px             /* Limit form width */
+}
+
+.contact-form input,
+.contact-form textarea{
+    background:transparent;      /* No background */
+    border:1px solid rgba(255,255,255,0.06); /* Light border */
+    padding:12px;                /* Input padding */
+    border-radius:8px;           /* Rounded */
+    color:inherit                /* Use body text color */
+}
+
+.contact-form textarea{min-height:140px} /* Make textarea taller */
+
+.contact-form .btn-primary{align-self:flex-start} /* Align send button left */
+
+footer{
+    padding:22px 0;              /* Footer spacing */
+    text-align:center;           /* Center footer text */
+    color:var(--muted);          /* Muted text */
+    border-top:1px solid rgba(255,255,255,0.02) /* Top border */
+}
+
+/* Responsive Styles */
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr}       /* Collapse hero to one column */
+  .projects-grid{grid-template-columns:repeat(2,1fr)} /* 2 columns */
+}
+
+@media(max-width:560px){
+  .nav-links{display:none}               /* Hide nav links on mobile */
+  .projects-grid{grid-template-columns:1fr} /* Single column */
+  .hero-image{height:220px}              /* Smaller hero image */
+}
