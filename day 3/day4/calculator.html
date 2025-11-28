@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Interactive Calculators & Form Validation — Saurab Khanal</title>
+  <style>
+    /* Simple, modern styles for the demo */
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#6ee7b7; --glass:rgba(255,255,255,0.03);
+      --radius:12px; --container:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef6;background:linear-gradient(180deg,#071827 0%, #071a2a 100%);}
+    .wrap{max-width:var(--container);margin:28px auto;padding:20px;}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--radius);padding:16px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text], input[type=number], input[type=email], input[type=password], select, textarea{width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .row{display:flex;gap:8px}
+    .row > *{flex:1}
+    button{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:#01221a;font-weight:600;cursor:pointer}
+    small.error{color:#ff6b6b;display:block;margin-top:6px}
+    .result{margin-top:10px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);font-weight:600}
+    .calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+    .key{padding:12px;border-radius:8px;background:rgba(255,255,255,0.03);text-align:center;cursor:pointer;user-select:none}
+    .key.operator{background:rgba(110,231,183,0.12)}
+    .footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:420px){h1{font-size:18px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Interactive Calculators & Form Validation — <span style="color:var(--accent)">Saurab Khanal</span></h1>
+      <div style="color:var(--muted);font-size:13px">Vanilla JS • No libraries</div>
+    </header>
+
+    <main class="container">
+  <h2>Full Laptop‑Style Calculator</h2>
+  <div class="calc-wrapper">
+    <div class="calc-screen" id="calc-screen">0</div>
+    <div class="calc-buttons">
+      <button data-act="clear">C</button>
+      <button data-act="del">⌫</button>
+      <button data-act="percent">%</button>
+      <button data-op="/">÷</button>
+
+      <button data-num="7">7</button>
+      <button data-num="6">6</button>
+      <button data-num="5">5</button>
+      <button data-op="*">×</button>
+
+      <button data-num="4">4</button>
+      <button data-num="3">3</button>
+      <button data-num="2">2</button>
+      <button data-op="-">−</button>
+
+      <button data-num="1">1</button>
+      <button data-num="0">0</button>
+      <button data-num=".">.</button>
+      <button data-op="+">+</button>
+
+      <button class="equal" data-act="equal">=</button>
+    </div>
+  </div>
+</main>
+
+<style>
+.calc-wrapper{
+  width:300px; background:#111; padding:20px; border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,.5);
+}
+.calc-screen{
+  background:#222; color:#0f0; padding:15px; font-size:2rem; text-align:right;
+  border-radius:8px; margin-bottom:10px; min-height:45px;
+}
+.calc-buttons{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+}
+.calc-buttons button{
+  padding:15px; font-size:1.2rem; border:none; border-radius:8px;
+  background:#333; color:white; cursor:pointer; transition:0.2s;
+}
+.calc-buttons button:hover{ background:#444; }
+.equal{ grid-column:span 4; background:#0066ff !important; }
+</style>
+
+<script>
+// FIXED BUTTON CLICK ISSUE – ensured buttons are not blocked by other layers
+(function(){
+  const screen = document.getElementById("calc-screen");
+  let current = "0";
+  let operator = null;
+  let previous = null;
+
+  // Ensure all buttons are clickable
+  document.querySelectorAll(".calc-buttons button, .equal").forEach(btn => {
+    btn.style.pointerEvents = "auto";
+    btn.addEventListener("click", () => handle(btn));
+  });
+
+  function handle(btn){
+    const num = btn.dataset.num;
+    const op = btn.dataset.op;
+    const act = btn.dataset.act;
+
+    if(num !== undefined) return pressNum(num);
+    if(op !== undefined) return setOperator(op);
+    if(act === "clear") return clearCalc();
+    if(act === "del") return delChar();
+    if(act === "percent") return percent();
+    if(act === "equal") return evaluate();
+  }
+
+  function pressNum(n){
+    if(current === "0" && n !== ".") current = n;
+    else current += n;
+    update();
+  }
+
+  function setOperator(op){
+    previous = current;
+    current = "";
+    operator = op;
+  }
+
+  function clearCalc(){
+    current = "0"; previous = null; operator = null; update();
+  }
+
+  function delChar(){
+    current = current.length > 1 ? current.slice(0,-1) : "0";
+    update();
+  }
+
+  function percent(){
+    current = String(parseFloat(current) / 100);
+    update();
+  }
+
+  function evaluate(){
+    if(previous === null || operator === null) return;
+
+    const a = parseFloat(previous);
+    const b = parseFloat(current);
+    let result = 0;
+
+    switch(operator){
+      case "+": result = a + b; break;
+      case "-": result = a - b; break;
+      case "*": result = a * b; break;
+      case "/": result = b === 0 ? "Error" : a / b; break;
+    }
+
+    current = String(result);
+    previous = null;
+    operator = null;
+    update();
+  }
+
+  function update(){ screen.textContent = current; }
+})();
+</script>
+
+<script>
+function add() {
+  const n1 = parseFloat(document.getElementById('num1').value) || 0;
+  const n2 = parseFloat(document.getElementById('num2').value) || 0;
+  document.getElementById('simple-result').textContent = `Result: ${n1 + n2}`;
+}
+
+function subtract() {
+  const n1 = parseFloat(document.getElementById('num1').value) || 0;
+  const n2 = parseFloat(document.getElementById('num2').value) || 0;
+  document.getElementById('simple-result').textContent = `Result: ${n1 - n2}`;
+}
+</script>
+
+    <div class="footer">Tip: Try keyboard input on the calculator (numbers, + - * /, Enter for =). Built for learning by Saurab Khanal.</div>
+  </div>
+
+  <script>
+  /*
+    Interactive Calculators + Form Validation
+    Author: Saurab Khanal (used inside examples per user preference)
+    All logic implemented with vanilla JavaScript and progressive enhancement.
+  */
+
+  // ---------- BASIC CALCULATOR ----------
+  (function(){
+    const keysContainer = document.getElementById('keys');
+    const display = document.getElementById('display');
+    const clearBtn = document.getElementById('clear');
+    const backBtn = document.getElementById('back');
+    const negBtn = document.getElementById('neg');
+    const equalsBtn = document.getElementById('equals');
+
+    const keys = [
+      '7','8','9','/',
+      '4','5','6','*',
+      '1','2','3','-',
+      '0','.', '%','+'
+    ];
+
+    keys.forEach(k=>{
+      const btn = document.createElement('div');
+      btn.className = 'key' + (/[+\-*/%]/.test(k) ? ' operator' : '');
+      btn.tabIndex = 0;
+      btn.setAttribute('role','button');
+      btn.textContent = k;
+      btn.addEventListener('click',()=>append(k));
+      btn.addEventListener('keydown', e=>{ if(e.key === 'Enter' || e.key === ' ') append(k); });
+      keysContainer.appendChild(btn);
+    });
+
+    function append(val){
+      // prevent leading zeros like 000
+      if(display.value === '0' && val !== '.' ) display.value = val;
+      else display.value = (display.value || '') + val;
+      display.focus();
+    }
+
+    function safeEval(expr){
+      // very small sandbox: allow digits, parentheses, decimals, operators + - * / % and spaces
+      if(!/^[0-9+\-*/().%\s]+$/.test(expr)) throw new Error('Invalid characters');
+      // No consecutive operators except a minus after operator (e.g. 5*-2) is allowed by eval but we keep simple
+      return Function('return ' + expr)();
+    }
+
+    equalsBtn.addEventListener('click', compute);
+    clearBtn.addEventListener('click', ()=>display.value='');
+    backBtn.addEventListener('click', ()=>display.value = display.value.slice(0,-1));
+    negBtn.addEventListener('click', ()=>{ if(display.value) display.value = String(Number(display.value) * -1); });
+
+    display.addEventListener('keydown', e=>{
+      if(e.key === 'Enter') compute();
+      // allow only safe keys
+      const allowed = '0123456789+-*/().% ';
+      if(e.key.length === 1 && !allowed.includes(e.key)){
+        // prevent typing bad chars
+        e.preventDefault();
+      }
+    });
+
+    function compute(){
+      try{
+        if(!display.value.trim()) return;
+        const out = safeEval(display.value);
+        display.value = String(out);
+      }catch(err){
+        display.value = 'Error';
+        setTimeout(()=>{ if(display.value === 'Error') display.value = ''; },1200);
+      }
+    }
+  })();
+
+  // ---------- BMI CALCULATOR ----------
+  (function(){
+    const w = document.getElementById('bmiWeight');
+    const h = document.getElementById('bmiHeight');
+    const btn = document.getElementById('calcBmi');
+    const res = document.getElementById('bmiResult');
+    const reset = document.getElementById('resetBmi');
+
+    btn.addEventListener('click', ()=>{
+      const weight = Number(w.value);
+      const heightCm = Number(h.value);
+      if(!weight || !heightCm){
+        show('Please enter valid weight and height', true);
+        return;
+      }
+      const heightM = heightCm/100;
+      const bmi = weight / (heightM * heightM);
+      const rounded = Math.round(bmi*10)/10;
+      let cat = '';
+      if(bmi < 18.5) cat = 'Underweight';
+      else if(bmi < 25) cat = 'Normal weight';
+      else if(bmi < 30) cat = 'Overweight';
+      else cat = 'Obesity';
+      show(`BMI: ${rounded} — ${cat}`);
+    });
+
+    reset.addEventListener('click', ()=>{ w.value=''; h.value=''; res.style.display='none'; });
+
+    function show(txt, isErr){ res.style.display='block'; res.textContent = txt; res.style.color = isErr ? '#ff6b6b' : 'inherit'; }
+  })();
+
+  // ---------- EMI / LOAN CALCULATOR ----------
+  (function(){
+    const amt = document.getElementById('loanAmount');
+    const rate = document.getElementById('loanRate');
+    const tenure = document.getElementById('loanTenure');
+    const btn = document.getElementById('calcEmi');
+    const res = document.getElementById('emiResult');
+    const reset = document.getElementById('resetEmi');
+
+    btn.addEventListener('click', ()=>{
+      const P = Number(amt.value);
+      const annualR = Number(rate.value);
+      const years = Number(tenure.value);
+      if(!P || !annualR || !years){ res.style.display='block'; res.textContent='Enter valid principal, rate and tenure'; res.style.color='#ff6b6b'; return; }
+      const monthlyR = annualR/1200;
+      const n = years * 12;
+      const emi = (P * monthlyR * Math.pow(1+monthlyR, n)) / (Math.pow(1+monthlyR, n) - 1);
+      const total = emi * n;
+      res.style.display='block';
+      res.style.color = 'inherit';
+      res.innerHTML = `Monthly EMI: <strong>₹ ${emi.toFixed(2)}</strong> <br> Total payment: <strong>₹ ${total.toFixed(2)}</strong> (Interest: ₹ ${(total-P).toFixed(2)})`;
+    });
+
+    reset.addEventListener('click', ()=>{ amt.value=''; rate.value=''; tenure.value=''; res.style.display='none'; });
+  })();
+
+  // ---------- FORM VALIDATION (registration) ----------
+  (function(){
+    const form = document.getElementById('regForm');
+    const nameEl = document.getElementById('fullName');
+    const emailEl = document.getElementById('email');
+    const phoneEl = document.getElementById('phone');
+    const pwEl = document.getElementById('password');
+    const confEl = document.getElementById('confirm');
+
+    const nameErr = document.getElementById('nameErr');
+    const emailErr = document.getElementById('emailErr');
+    const phoneErr = document.getElementById('phoneErr');
+    const pwErr = document.getElementById('pwErr');
+    const confErr = document.getElementById('confirmErr');
+    const success = document.getElementById('formSuccess');
+    const resetBtn = document.getElementById('resetForm');
+
+    function validateName(){
+      const v = nameEl.value.trim();
+      if(!v){ nameErr.textContent='Name is required'; return false; }
+      if(v.length < 3){ nameErr.textContent='Name must be at least 3 characters'; return false; }
+      nameErr.textContent=''; return true;
+    }
+
+    function validateEmail(){
+      const v = emailEl.value.trim();
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!v){ emailErr.textContent='Email is required'; return false; }
+      if(!re.test(v)){ emailErr.textContent='Enter a valid email'; return false; }
+      emailErr.textContent=''; return true;
+    }
+
+    function validatePhone(){
+      const v = phoneEl.value.trim();
+      if(!v){ phoneErr.textContent='Phone is required'; return false; }
+      if(!/^\d{9,12}$/.test(v)){ phoneErr.textContent='Enter 9–12 digits (no + or spaces)'; return false; }
+      phoneErr.textContent=''; return true;
+    }
+
+    function validatePassword(){
+      const v = pwEl.value;
+      if(!v || v.length < 6){ pwErr.textContent='Password must be at least 6 characters'; return false; }
+      pwErr.textContent=''; return true;
+    }
+
+    function validateConfirm(){
+      if(confEl.value !== pwEl.value){ confErr.textContent='Passwords do not match'; return false; }
+      confErr.textContent=''; return true;
+    }
+
+    // wire up blur events for instant feedback
+    nameEl.addEventListener('blur', validateName);
+    emailEl.addEventListener('blur', validateEmail);
+    phoneEl.addEventListener('blur', validatePhone);
+    pwEl.addEventListener('blur', validatePassword);
+    confEl.addEventListener('blur', validateConfirm);
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const ok = [validateName(), validateEmail(), validatePhone(), validatePassword(), validateConfirm()].every(Boolean);
+      if(!ok){ success.style.display='none'; return; }
+      // show success (would normally send to server)
+      success.style.display='block';
+      success.textContent = `Registration successful — Welcome, ${nameEl.value.trim()}! (Example by Saurab Khanal)`;
+      // reset fields after registering (optional)
+      form.reset();
+    });
+
+    resetBtn.addEventListener('click', ()=>{ form.reset(); [nameErr,emailErr,phoneErr,pwErr,confErr].forEach(x=>x.textContent=''); success.style.display='none'; });
+  })();
+
+  </script>
+</body>
+</html>

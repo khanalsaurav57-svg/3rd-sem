@@ -1,0 +1,30 @@
+/* Basic styling */
+.card-container {
+  display: grid;
+  grid-template-columns: 1fr; /* 1 column on mobile */
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Card style */
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  color: white;
+  font-size: 20px;
+}
+
+/* Tablet (≥ 600px) → 2 columns */
+@media (min-width: 600px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop (≥ 900px) → 3 columns */
+@media (min-width: 900px) {
+  .card-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
