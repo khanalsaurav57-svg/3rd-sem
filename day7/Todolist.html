@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Styled Todo List</title>
+
+    <style>
+        body{
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:0;
+        }
+
+        .container{
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            padding:25px;
+            width:360px;
+            border-radius:14px;
+            box-shadow:0 8px 25px rgba(0,0,0,0.4);
+            border:1px solid rgba(255,255,255,0.2);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:18px;
+            color:#fff;
+            font-weight:600;
+        }
+
+        #todoForm{
+            display:flex;
+            gap:10px;
+        }
+
+        #todoForm input{
+            flex:1;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            outline:none;
+            background:#ffffffc9;
+        }
+
+        #todoForm button{
+            background:#00d1ff;
+            color:black;
+            font-weight:600;
+            border:none;
+            padding:12px 18px;
+            border-radius:8px;
+            cursor:pointer;
+            transition:.3s;
+        }
+        #todoForm button:hover{
+            background:#00b7e3;
+        }
+
+        ul{
+            margin-top:20px;
+            padding:0;
+            list-style:none;
+            max-height:250px;
+            overflow-y:auto;
+        }
+
+        li{
+            background:#ffffffd3;
+            margin-bottom:10px;
+            padding:10px;
+            border-radius:8px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-weight:500;
+        }
+
+        li button{
+            background:#ff3b3b;
+            border:none;
+            color:white;
+            font-size:14px;
+            padding:5px 10px;
+            border-radius:6px;
+            cursor:pointer;
+            transition:.3s;
+        }
+        li button:hover{
+            background:#d92f2f;
+        }
+
+        .clear-btn{
+            width:100%;
+            margin-top:10px;
+            background:#ffbf00;
+            color:#000;
+            border:none;
+            padding:10px;
+            font-weight:600;
+            border-radius:8px;
+            cursor:pointer;
+            transition:.3s;
+        }
+        .clear-btn:hover{
+            background:#e0aa00;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>📌 To-Do List</h2>
+
+    <form id="todoForm">
+        <input type="text" id="task" placeholder="Enter task..." required>
+        <button type="submit">Add</button>
+    </form>
+
+    <ul id="taskList"></ul>
+
+    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+</div>
+
+
+<script>
+    const taskForm = document.getElementById("todoForm");
+    const taskInput = document.getElementById("task");
+    const taskList = document.getElementById("taskList");
+
+    function loadTasks(){
+        const saved = localStorage.getItem("todo");
+        if(saved) taskList.innerHTML = saved;
+    }
+
+    taskForm.addEventListener("submit",(e)=>{
+        e.preventDefault();
+
+        const li = document.createElement("li");
+        li.textContent = taskInput.value;
+
+        const btn = document.createElement("button");
+        btn.textContent = "X";
+        li.appendChild(btn);
+
+        btn.addEventListener("click",()=>{
+            li.remove();
+            saveData();
+        });
+
+        taskList.appendChild(li);
+        saveData();
+        taskInput.value = "";
+    });
+
+    function saveData(){
+        localStorage.setItem("todo", taskList.innerHTML);
+    }
+
+    function clearAll(){
+        localStorage.clear();
+        taskList.innerHTML = "";
+    }
+
+    loadTasks();
+</script>
+
+</body>
+</html>
