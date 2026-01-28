@@ -1,0 +1,16 @@
+buttton {
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 1px;
+    cursor: pointer;
+}
+.primary{
+    background-color: blue;
+    color: aliceblue;
+}
+
+.outline{
+    background-color: white;
+    color: aqua;
+    border: 1px solid blue;
+}
