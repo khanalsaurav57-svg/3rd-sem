@@ -13,3 +13,4 @@ async function getDataFromAPI() {
   getDataFromAPI();
 
     
+  
